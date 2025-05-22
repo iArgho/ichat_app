@@ -9,7 +9,7 @@ class iChat extends StatelessWidget {
     return MaterialApp(
       title: 'iChat App',
       theme: ThemeData(
-        useMaterial3: true, // Optional but recommended for latest design system
+        useMaterial3: true,
         primaryColor: const Color(0xFF006AFF),
         scaffoldBackgroundColor: const Color(0xFFF6F8FC),
         fontFamily: 'Roboto',

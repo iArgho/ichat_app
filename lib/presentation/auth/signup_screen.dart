@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ichat_app/presentation/screens/home_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -57,7 +58,14 @@ class SignUpScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ),
+                      );
+                    },
                     child: const Text('Sign Up'),
                   ),
                 ),
