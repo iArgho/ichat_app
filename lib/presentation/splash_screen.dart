@@ -1,11 +1,19 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:ichat_app/presentation/auth/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Add timer or logic to navigate to login/home later
+    Timer(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    });
+
     return Scaffold(
       body: Center(
         child: Column(
