@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ichat_app/presentation/widgets/chat_participant_avatar.dart';
+import 'package:ichat_app/presentation/screens/user_profile_screen.dart'; // Make sure this import exists
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String userName = "Argho";
+    final user = FirebaseAuth.instance.currentUser;
+    final String userName =
+        user?.displayName ?? user?.email?.split('@')[0] ?? 'User';
 
     final List<String> participants = ['Argho', 'Nina', 'Leo'];
 
@@ -35,11 +39,23 @@ class HomeScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-              child: Text(
-                userName[0],
-                style: TextStyle(color: Theme.of(context).primaryColor),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserProfileScreen(),
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                backgroundColor: Theme.of(
+                  context,
+                ).primaryColor.withOpacity(0.1),
+                child: Text(
+                  userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
               ),
             ),
           ),
@@ -65,6 +81,15 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Welcome, $userName!',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
