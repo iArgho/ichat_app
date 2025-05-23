@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:ichat_app/presentation/screens/home_screen.dart';
+import 'package:ichat_app/service/firebase_service.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final FirebaseService _firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +38,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 TextFormField(
+                  controller: nameController,
                   decoration: const InputDecoration(
                     labelText: 'Full Name',
                     prefixIcon: Icon(Icons.person_outline),
@@ -32,6 +46,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -39,6 +54,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Password',
@@ -47,6 +63,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: confirmPasswordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Confirm Password',
@@ -58,13 +75,35 @@ class SignUpScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      );
+                    onPressed: () async {
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Passwords do not match'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        await _firebaseService.signUp(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Signup failed: ${e.toString()}'),
+                          ),
+                        );
+                      }
                     },
                     child: const Text('Sign Up'),
                   ),

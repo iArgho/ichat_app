@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ichat_app/presentation/auth/signup_screen.dart';
+import 'package:ichat_app/presentation/screens/home_screen.dart';
+import 'package:ichat_app/service/firebase_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FirebaseService _firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +36,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 TextFormField(
+                  controller: emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -32,6 +44,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Password',
@@ -43,7 +56,26 @@ class LoginScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        await _firebaseService.login(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Login failed: ${e.toString()}'),
+                          ),
+                        );
+                      }
+                    },
                     child: const Text('Login'),
                   ),
                 ),
