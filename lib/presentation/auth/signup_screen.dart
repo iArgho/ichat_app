@@ -90,7 +90,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         await _firebaseService.signUp(
                           emailController.text.trim(),
                           passwordController.text.trim(),
+                          nameController.text.trim(),
                         );
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ichat_app/presentation/auth/login_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -26,7 +27,11 @@ class UserProfileScreen extends StatelessWidget {
 
     if (shouldLogout == true) {
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (route) => false,
+      );
     }
   }
 
@@ -66,7 +71,10 @@ class UserProfileScreen extends StatelessWidget {
                     photoUrl != null ? NetworkImage(photoUrl) : null,
                 child:
                     photoUrl == null
-                        ? Text(displayName[0].toUpperCase())
+                        ? Text(
+                          displayName[0].toUpperCase(),
+                          style: const TextStyle(fontSize: 24),
+                        )
                         : null,
                 backgroundColor: Theme.of(
                   context,
@@ -89,6 +97,10 @@ class UserProfileScreen extends StatelessWidget {
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 24),
+              const Text(
+                "Welcome to your profile!",
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
             ],
           ),
         ),
