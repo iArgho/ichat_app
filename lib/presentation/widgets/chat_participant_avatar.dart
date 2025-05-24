@@ -13,7 +13,7 @@ class ChatParticipantAvatar extends StatelessWidget {
           radius: 25,
           backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
           child: Text(
-            name[0].toUpperCase(),
+            name.isNotEmpty ? name[0].toUpperCase() : '?',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
