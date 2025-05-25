@@ -11,7 +11,6 @@
 - 🔒 Firebase Authentication (Email & Password)
 - 💬 Real-time Messaging using Firestore
 - 👤 User Profile Management
-- 🟢 Online/Offline Status Indicators
 - 🖼️ Image support *(coming soon)*
 - 📱 Responsive UI (iOS & Android)
 
