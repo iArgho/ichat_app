@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ichat_app/presentation/screens/chat_screen.dart';
 import 'package:ichat_app/presentation/screens/user_profile_screen.dart';
-import 'package:ichat_app/presentation/widgets/chat_participant_avatar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
     return snapshot.docs
-        .map((doc) => doc.data() ?? {})
-        .where((data) => data.containsKey('name'))
+        .map((doc) => doc.data())
+        .whereType<Map<String, dynamic>>()
+        .where((data) => data.containsKey('name') && data.containsKey('uid'))
         .toList();
   }
 
@@ -119,39 +120,66 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(child: Text("No users found."));
                 }
 
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 80,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount: users.length,
-                            separatorBuilder:
-                                (_, __) => const SizedBox(width: 12),
-                            itemBuilder: (context, index) {
-                              final user = users[index];
-                              final name = user['name'] ?? 'User';
-                              return ChatParticipantAvatar(name: name);
-                            },
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  itemCount: users.length,
+                  separatorBuilder: (_, __) => const Divider(indent: 80),
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    final name = user['name'] ?? 'User';
+                    final uid = user['uid'];
+
+                    if (uid == currentUser.uid) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => ChatScreen(
+                                  otherUserName: name,
+                                  otherUserId: uid,
+                                ),
+                          ),
+                        );
+                      },
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).primaryColor.withOpacity(0.2),
+                        child: Text(
+                          name.isNotEmpty ? name[0].toUpperCase() : '?',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        const SizedBox(height: 32),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Welcome, $userName!',
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      title: Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                      subtitle: const Text(
+                        'Tap to chat',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      trailing: Text(
+                        '',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
