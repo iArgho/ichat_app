@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:ichat_app/presentation/screens/user_profile_screen.dart';
 import 'package:ichat_app/presentation/widgets/chat_participant_avatar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   Future<List<Map<String, dynamic>>> fetchAllUsers() async {
     final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
