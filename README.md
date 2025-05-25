@@ -27,7 +27,7 @@
 
 ### 💬 Chat Screens
 
-| Chat List | Chat Screen | Chat Input |
+| Chat List | Chat Input | Chat Screen |
 |:---------:|:-----------:|:----------:|
 | ![Chat List](https://github.com/user-attachments/assets/c2818965-12ca-457a-9c53-ad1bb4e94857) | ![chat Screen](https://github.com/user-attachments/assets/331eafb9-7e67-4c0a-9cf5-c6953e62d0d3) | ![chats screen](https://github.com/user-attachments/assets/d5474b98-3fc0-47e7-85ea-55e8107264da) |
 
